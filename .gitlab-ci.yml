@@ -1,0 +1,40 @@
+image: docker:latest
+stages:
+  - deploy_dev
+  - build_prod
+  - deploy_prod
+
+deploy_dev:
+  stage: deploy_dev
+  script:
+    - apk add --update --no-cache sshpass
+    - apk add --update --no-cache openssh sshpass
+    - sshpass -p $pass ssh -p $port root@$host -o StrictHostKeyChecking=no "bash /home/ubuntu/app/landing-page/frontend/restart.sh"
+  only:
+    - dev
+
+build_prod:
+  services:
+    - docker:19.03.12-dind
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ""
+  stage: build_prod
+  script:
+    - docker login $ACR_REPOP -u $ACR_USERP -p $ACR_PASSP
+    - docker build -f Dockerfile -t $IMAGE_NAMEP:latest -t $ACR_REPOP/$IMAGE_NAMEP:$CI_COMMIT_SHORT_SHA .
+    - docker push $ACR_REPOP/$IMAGE_NAMEP:$CI_COMMIT_SHORT_SHA
+  only:
+    - prod
+
+deploy_prod:
+  stage: deploy_prod
+  image: dockertf987/az.kubectl:pipeline
+  script:
+    - az login --service-principal --username $AZ_USER --password $AZ_PASS --tenant $AZ_TENANT
+    - az aks get-credentials --resource-group prod-vison --name prod-vison-cluster --overwrite-existing
+    - kubectl --record deployment.apps/$APPS set image deployment.v1.apps/$APPS $APPS=$ACR_REPOP/$APPS:$CI_COMMIT_SHORT_SHA -n prod
+  dependencies:
+    - build_prod
+  only:
+    - prod
