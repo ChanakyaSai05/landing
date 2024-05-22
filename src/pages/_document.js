@@ -12,7 +12,7 @@ export default function Document() {
         <Main />
         <NextScript />
       </body>
-      <GoogleTagManager gtmId="GTM-PQ7CHC3C" />
+      {/* <GoogleTagManager gtmId="GTM-PQ7CHC3C" /> */}
     </Html>
   );
 }
