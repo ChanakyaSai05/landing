@@ -282,15 +282,15 @@ function Subscription(props) {
           </Col>
         </Row> */}
 
-        <Row>
+        {/* <Row>
           <Col className="col-12 py-4 mb-4">
             <h2 className="ff-reemkufi display-5 text-center">
               Answer To Your Questions
             </h2>
           </Col>
-        </Row>
+        </Row> */}
 
-        <div className="accordion accordion-flush" id="accordionFlushExample">
+        {/* <div className="accordion accordion-flush" id="accordionFlushExample">
           <Row className="g-4 pb-2 mb-5">
             <Col className="col-12 col-lg-3 text-center text-sm-start">
               <h4 className="fs-2 fw-700">Answers To</h4>
@@ -629,7 +629,7 @@ function Subscription(props) {
               </div>
             </Col>
           </Row>
-        </div>
+        </div> */}
         <Row>
           <Col className="col-12">
             <h2 className="display-6 fw-800 text-center">
